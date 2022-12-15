@@ -1,0 +1,35 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Nunito, sans-serif;
+  background: #f5f6f7;
+}
+
+main {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  max-width: 30rem;
+  margin: auto;
+  padding: 2rem 1rem;
+}
+
+.weather-cards-wrapper {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  /* margin: 25px; */
+  height: 100px
+}
+
+.app-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

@@ -1,0 +1,45 @@
+.weather-card {
+  padding: 0;
+  width: 350px;
+  height: 250px;
+  margin: 10px;
+  /* background-color: aqua; */
+}
+
+.weather-location {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.weather-graph {
+  height: 100px;
+}
+
+.footer-statistic {
+  display: flex;
+  justify-content: space-between;
+}
+
+.temp-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.change-units {
+  display: flex;
+}
+
+.split-slash {
+  padding: 0 8px
+}
+
+.default {
+  color: gray;
+  cursor: pointer;
+}
