@@ -43,3 +43,12 @@
   color: gray;
   cursor: pointer;
 }
+
+.select{
+  width: 350px
+}
+
+.add-btn {
+  width: 100px;
+  margin-left: 16px
+}

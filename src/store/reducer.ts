@@ -11,7 +11,6 @@ const reducer = (
   switch (action.type) {
     case actionTypes.ADD_WEATHER_DATA:
       const newWeatherData: IWeather = {
-        id: Math.random(),
         ...action.weatherData
       };
       return {

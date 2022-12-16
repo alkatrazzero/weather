@@ -1,7 +1,7 @@
 import * as actionTypes from "./actionTypes";
 
-export function addWeatherData(weatherData: IWeather) {
-  const action:  WeatherAction = {
+export function addWeatherData(weatherData: IWeather ) {
+  const action: WeatherAction = {
     type: actionTypes.ADD_WEATHER_DATA,
     weatherData
   };

@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import { Dispatch } from "redux";
 import { useDispatch } from "react-redux";
 import { Card } from 'antd';
@@ -9,29 +9,53 @@ type Props = {
   weatherData: IWeather;
 };
 
+interface IKeys {
+  metric:string,
+  imperial: string
+}
+
 export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
-  const [viewVariant,setViewVariant] = useState<string>('metric')
-  const dispatch: Dispatch<any> = useDispatch();
-  const cardTemp = Math.round(weatherData[viewVariant].main.temp)
-  const feelsLikeTemp = Math.round(weatherData[viewVariant].main.feels_like)
+  const [viewVariant,setViewVariant] = useState<string>(weatherData.savedType || 'metric')
+  const selectedVariantWeatherData = weatherData[viewVariant as keyof IKeys]
+  const dispatch: Dispatch<any> = useDispatch()
+  const cardTemp = Math.round(selectedVariantWeatherData.main.temp)
+  const feelsLikeTemp = Math.round(selectedVariantWeatherData.main.feels_like)
   const isTempPositive = Math.sign(cardTemp)
-  const backgroundColor = !!isTempPositive ? 'rgb(255,250,241)' :'rgb(241,242,255)'
+  const backgroundColor = isTempPositive === 1 ? 'rgb(255,250,241)' :'rgb(241,242,255)'
+  const savedData = JSON.parse(localStorage.getItem('savedCountriesData') || '{}')
+
+  const isEqual = (data:ILocation)=>{
+    const equalLat = Math.round(weatherData.metric.coord.lat) === Math.round(Number(data.lat))
+    const equalLon = Math.round(weatherData.metric.coord.lon) === Math.round(Number(data.lon))
+    if( equalLat && equalLon )setViewVariant(data.type || 'metric')
+  }
+
+  const handleChangeVariant = (type:string) => {
+    const object = weatherData.metric.name
+    const savedData = JSON.parse(localStorage.getItem('savedCountriesData') || '{}')
+    localStorage.setItem('savedCountriesData', JSON.stringify({...savedData,[object]:{...savedData[object],type}}))
+    setViewVariant(type)
+  }
+
+  useEffect(()=>{
+    if(savedData.length) savedData.forEach((data:ILocation)=>isEqual(data))
+  },[])
 
   const otherData = [
     {
       id: Math.random(),
       title:'Wind',
-      value:weatherData[viewVariant].wind.speed
+      value:selectedVariantWeatherData.wind.speed
     },
     {
       id: Math.random(),
       title:'Humidity',
-      value:weatherData[viewVariant].main.humidity
+      value:selectedVariantWeatherData.main.humidity
     },
     {
       id: Math.random(),
       title:'Pressure',
-      value:weatherData[viewVariant].main.pressure
+      value:selectedVariantWeatherData.main.pressure
     },
   ]
   return (
@@ -41,11 +65,11 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
     >
       <div className='header-row'>
         <div className='weather-location'>
-          <span>{`${weatherData[viewVariant].name}, ${weatherData[viewVariant].sys.country}`}</span>
-          <span>{moment(weatherData[viewVariant].dt).format("ddd DD MMMM, h:mm")}</span>
+          <span>{`${selectedVariantWeatherData.name}, ${selectedVariantWeatherData.sys.country}`}</span>
+          <span>{moment(selectedVariantWeatherData.dt).format("ddd DD MMMM, h:mm")}</span>
         </div>
         <div className='weather-status'>
-          <span>{weatherData[viewVariant].weather[0].main}</span>
+          <span>{selectedVariantWeatherData.weather[0].main}</span>
         </div>
       </div>
       <div className='weather-graph'>
@@ -54,24 +78,24 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
       <div className='footer-statistic'>
         <div className='temp-wrapper'>
           <div className='change-units'>
-            <span onClick={()=>{console.log("click")}} style={{'fontSize':'25px'}}>
-            {!!isTempPositive&& '+'}{cardTemp}
+            <span style={{'fontSize':'25px'}}>
+            {isTempPositive === 1 && '+'}{cardTemp}
             </span>
             <div>
               <span
-                onClick={()=>{setViewVariant('metric')}}
+                onClick={()=>handleChangeVariant('metric')}
                 className={viewVariant === 'metric' ? viewVariant : 'default'}
                 style={{'marginLeft': '15px'}}>
                 {'C'}
               </span>
                 <span className='split-slash'>|</span>
-              <span onClick={()=>{setViewVariant('imperial')}} className={viewVariant === 'imperial' ? viewVariant : 'default'} >
+              <span onClick={()=>handleChangeVariant('imperial')} className={viewVariant === 'imperial' ? viewVariant : 'default'} >
                 {'F'}
               </span>
             </div>
           </div>
           <span style= {{color: 'gray'}}>
-            Feels like: {!!isTempPositive&& '+'}{feelsLikeTemp}
+            Feels like: {isTempPositive === 1 && '+'}{feelsLikeTemp}
           </span>
         </div>
         <div style={{
@@ -80,8 +104,8 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
           'alignItems': 'flex-end'
         }}>
           {otherData.map((data=><span style={{
-            color: !!isTempPositive ? 'orange' : 'blue'
-            }} key={data.id}>{data.title}: {data.value}</span>))}
+            color: isTempPositive === 1 ? 'orange' : 'blue'
+            }} >{data.title}: {data.value}</span>))}
         </div>
       </div>
     </Card>
