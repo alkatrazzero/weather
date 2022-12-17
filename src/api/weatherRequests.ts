@@ -15,8 +15,8 @@ class WeatherRequests {
     }
     if( concatData && !data.initialUpdate){
       const savedData = JSON.parse(localStorage.getItem('savedCountriesData') || '{}')
-      if(Object.keys(savedData).length)localStorage.setItem('savedCountriesData', JSON.stringify({...savedData,[concatData.metric.name]:{lon:data.lon,lat:data.lat}}))
-      else localStorage.setItem('savedCountriesData',JSON.stringify({[concatData.metric.name]:{lon:data.lon,lat:data.lat}}))
+      if(Object.keys(savedData).length)localStorage.setItem('savedCountriesData', JSON.stringify({...savedData,[concatData.metric.name]:{...concatData}}))
+      else localStorage.setItem('savedCountriesData',JSON.stringify({[concatData.metric.name]:{...concatData}}))
     }
     return concatData
   }

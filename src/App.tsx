@@ -35,8 +35,8 @@ const App: React.FC = () => {
       if(Object.keys(savedData).length){
         setLoading(true)
         for (let location in savedData) {
-          const object: IGeocode = savedData[location]
-          await getWeatherByLocation(Number(object.lat),Number(object.lon),true,object.type)
+          const object: IWeather = savedData[location]
+          dispatch(addWeatherData(object))
         }
         setLoading(false)
       }

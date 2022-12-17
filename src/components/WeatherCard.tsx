@@ -36,7 +36,7 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
   const handleChangeVariant = (type:string):void => {
     const object = weatherData.metric.name
     const savedData = JSON.parse(localStorage.getItem('savedCountriesData') || '{}')
-    localStorage.setItem('savedCountriesData', JSON.stringify({...savedData,[object]:{...savedData[object],type}}))
+    localStorage.setItem('savedCountriesData', JSON.stringify({...savedData,[object]:{...savedData[object],savedType:type}}))
     setViewVariant(type)
   }
 
