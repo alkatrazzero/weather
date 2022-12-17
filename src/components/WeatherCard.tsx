@@ -1,7 +1,9 @@
 import React,{useState,useEffect} from "react";
 import { Dispatch } from "redux";
-import { useDispatch } from "react-redux";
-import { Card } from 'antd';
+import { Card,Image } from 'antd';
+import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
+import {  useDispatch } from "react-redux";
+import {deleteWeatherData} from '../store/actionCreators'
 import moment from 'moment'
 import './index.css'
 
@@ -23,6 +25,7 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
   const isTempPositive = Math.sign(cardTemp)
   const backgroundColor = isTempPositive === 1 ? 'rgb(255,250,241)' :'rgb(241,242,255)'
   const savedData = JSON.parse(localStorage.getItem('savedCountriesData') || '{}')
+  const iconUrl=`http://openweathermap.org/img/wn/${selectedVariantWeatherData.weather[0].icon}@2x.png`
 
   const isEqual = (data:ILocation)=>{
     const equalLat = Math.round(weatherData.metric.coord.lat) === Math.round(Number(data.lat))
@@ -30,11 +33,18 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
     if( equalLat && equalLon )setViewVariant(data.type || 'metric')
   }
 
-  const handleChangeVariant = (type:string) => {
+  const handleChangeVariant = (type:string):void => {
     const object = weatherData.metric.name
     const savedData = JSON.parse(localStorage.getItem('savedCountriesData') || '{}')
     localStorage.setItem('savedCountriesData', JSON.stringify({...savedData,[object]:{...savedData[object],type}}))
     setViewVariant(type)
+  }
+
+  const handleDelete =():void => {
+    const savedData = JSON.parse(localStorage.getItem('savedCountriesData') || '{}')
+    delete savedData[weatherData.metric.name]
+    localStorage.setItem('savedCountriesData', JSON.stringify({...savedData}))
+    dispatch(deleteWeatherData(weatherData))
   }
 
   useEffect(()=>{
@@ -64,12 +74,19 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
       style={{'backgroundColor':backgroundColor}}
     >
       <div className='header-row'>
+        <button onClick={handleDelete}>delete</button>
         <div className='weather-location'>
-          <span>{`${selectedVariantWeatherData.name}, ${selectedVariantWeatherData.sys.country}`}</span>
+          <span className='country-title'>{`${selectedVariantWeatherData.name}, ${selectedVariantWeatherData.sys.country}`}</span>
           <span>{moment(selectedVariantWeatherData.dt).format("ddd DD MMMM, h:mm")}</span>
         </div>
         <div className='weather-status'>
           <span>{selectedVariantWeatherData.weather[0].main}</span>
+          <Image
+            className='weather-status-icon'
+            width={30}
+            preview={false}
+            src={iconUrl}
+          />
         </div>
       </div>
       <div className='weather-graph'>
@@ -103,9 +120,12 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
           'flexDirection': 'column',
           'alignItems': 'flex-end'
         }}>
-          {otherData.map((data=><span style={{
-            color: isTempPositive === 1 ? 'orange' : 'blue'
-            }} >{data.title}: {data.value}</span>))}
+          {otherData.map(((data,index)=><span
+              style={{ color: isTempPositive === 1 ? 'orange' : 'blue'}}
+              key={index}
+            >
+            {data.title}: {data.value}
+            </span>))}
         </div>
       </div>
     </Card>

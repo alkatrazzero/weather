@@ -1,11 +1,13 @@
 import React, {useEffect,useState} from "react";
 import { Button} from 'antd';
+import {useDispatch} from 'react-redux'
+import { Dispatch } from "redux";
+import weatherRequests from '../api/weatherRequests'
+import { addWeatherData } from "../store/actionCreators";
 import { Select } from 'antd';
 
 type Props = {
-  saveWeatherData: (weatherData: IWeather| any) => void;
   getWeatherByLocation: (lat:number,lon:number) => void;
-  getCountryGeocode: (city:string)=>Promise<IGeocode[]>
 };
 
 type ICountryValue  ={
@@ -13,12 +15,13 @@ type ICountryValue  ={
   label: string
 }
 
-export const AddWeatherCard: React.FC<Props> = ({ saveWeatherData,getWeatherByLocation,getCountryGeocode }) => {
+export const AddWeatherCard: React.FC<Props> = ({ getWeatherByLocation }) => {
   const [location, setLocation] = useState<string[]>([]);
+  const dispatch: Dispatch<any> = useDispatch();
   const [loading,setLoading] = useState<boolean>(false)
   const [searchData,setSearchData] = useState<Array<ICountryValue>>()
 
-  const addNewWeatherData = async() => {
+  const addNewWeatherData = async():Promise<void> => {
     if( location.length) {
       setLoading(true)
       await getWeatherByLocation(Number(location[0]),Number(location[1]));
@@ -27,9 +30,7 @@ export const AddWeatherCard: React.FC<Props> = ({ saveWeatherData,getWeatherByLo
     }
   };
 
-  const onChange = async (value: string) => {
-    setLocation(value.split(','))
-  };
+  const onChange = (value: string):void => setLocation(value.split(','))
 
   const onSearch = async(value: string) => {
     const response = await getCountryGeocode(value)
@@ -38,6 +39,12 @@ export const AddWeatherCard: React.FC<Props> = ({ saveWeatherData,getWeatherByLo
     })
     setSearchData(result)
   };
+
+  const saveWeatherData = (weatherData: IWeather) => dispatch(addWeatherData(weatherData))
+
+  const getCountryGeocode =async (city:string): Promise<IGeocode[]> => {
+    return await weatherRequests.getCountryGeocode(city)
+  }
 
   return (
     <div>

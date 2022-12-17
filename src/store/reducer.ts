@@ -13,9 +13,19 @@ const reducer = (
       const newWeatherData: IWeather = {
         ...action.weatherData
       };
+			const duplicate = state.weatherData.filter(i=>i.metric.name === action.weatherData.metric.name )
+			if(duplicate.length) return { ...state}
       return {
         ...state,
         weatherData: state.weatherData.concat(newWeatherData)
+      };
+		case actionTypes.DELETE_WEATHER_DATA:
+			let targetIndex = state.weatherData.indexOf(action.weatherData);
+			const copiedData = [...state.weatherData]
+			copiedData.splice(targetIndex, 1)
+      return {
+				...state,
+        weatherData: copiedData
       };
   }
   return state;

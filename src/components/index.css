@@ -52,3 +52,11 @@
   width: 100px;
   margin-left: 16px
 }
+
+.country-title {
+  font-weight: 700;
+}
+
+.weather-status-icon {
+  margin-left: 8px
+}
