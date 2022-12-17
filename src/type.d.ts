@@ -2,10 +2,21 @@ interface IMetric {
   [key:string]: any
 }
 
+interface IGraphValue {
+  dt:number,
+  temp:number
+}
+
+interface IGraph {
+  imperial: IGraphValue[]
+  metric: IGraphValue[]
+}
+
 interface IWeather {
   savedType: string
   metric: IMetric
-  imperial: IMetric
+  imperial: IMetric,
+  graphData: IGraph
 }
 
 interface ILocation {

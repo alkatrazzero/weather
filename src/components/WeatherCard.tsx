@@ -4,6 +4,8 @@ import { Card,Image } from 'antd';
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
 import {  useDispatch } from "react-redux";
 import {deleteWeatherData} from '../store/actionCreators'
+import{ Graph } from './Graph'
+import { ReactComponent as DeleteIcon } from '../public/icons/xmark-solid.svg';
 import moment from 'moment'
 import './index.css'
 
@@ -73,24 +75,29 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
       className="weather-card"
       style={{'backgroundColor':backgroundColor}}
     >
-      <div className='header-row'>
-        <button onClick={handleDelete}>delete</button>
+      <div className='header-row' >
+        <DeleteIcon
+          onClick={handleDelete}
+          className='deleteBtn'
+        />
         <div className='weather-location'>
           <span className='country-title'>{`${selectedVariantWeatherData.name}, ${selectedVariantWeatherData.sys.country}`}</span>
           <span>{moment(selectedVariantWeatherData.dt).format("ddd DD MMMM, h:mm")}</span>
         </div>
         <div className='weather-status'>
-          <span>{selectedVariantWeatherData.weather[0].main}</span>
           <Image
-            className='weather-status-icon'
             width={30}
             preview={false}
             src={iconUrl}
           />
+          <span style={{marginLeft:'8px',color:'gray'}}>{selectedVariantWeatherData.weather[0].main}</span>
         </div>
       </div>
       <div className='weather-graph'>
-        <span>GRAPH</span>
+        <Graph
+          isPositive={isTempPositive === 1}
+          graphData={weatherData.graphData[viewVariant as keyof IKeys]}
+        />
       </div>
       <div className='footer-statistic'>
         <div className='temp-wrapper'>
@@ -103,16 +110,16 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
                 onClick={()=>handleChangeVariant('metric')}
                 className={viewVariant === 'metric' ? viewVariant : 'default'}
                 style={{'marginLeft': '15px'}}>
-                {'C'}
+                {'°C'}
               </span>
                 <span className='split-slash'>|</span>
               <span onClick={()=>handleChangeVariant('imperial')} className={viewVariant === 'imperial' ? viewVariant : 'default'} >
-                {'F'}
+                {'℉'}
               </span>
             </div>
           </div>
           <span style= {{color: 'gray'}}>
-            Feels like: {isTempPositive === 1 && '+'}{feelsLikeTemp}
+            Feels like: {isTempPositive === 1 && '+'}{feelsLikeTemp} {viewVariant === 'metric' ? '°C' : '℉'}
           </span>
         </div>
         <div style={{
@@ -120,11 +127,9 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
           'flexDirection': 'column',
           'alignItems': 'flex-end'
         }}>
-          {otherData.map(((data,index)=><span
-              style={{ color: isTempPositive === 1 ? 'orange' : 'blue'}}
-              key={index}
-            >
-            {data.title}: {data.value}
+          {otherData.map(((data,index)=><span key={index}>
+            {data.title}:
+            <span  style={{ color: isTempPositive === 1 ? 'orange' : 'blue'}}> {data.value}</span>
             </span>))}
         </div>
       </div>

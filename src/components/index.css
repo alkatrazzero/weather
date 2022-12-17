@@ -1,9 +1,10 @@
 .weather-card {
   padding: 0;
   width: 350px;
-  height: 250px;
+  height: 280px;
   margin: 10px;
-  /* background-color: aqua; */
+  border-sg;
+  box-shadow: 0 4px 5px 1px rgba(223, 228, 248, 0.6);
 }
 
 .weather-location {
@@ -22,6 +23,7 @@
 }
 
 .footer-statistic {
+  margin-top: 16px;
   display: flex;
   justify-content: space-between;
 }
@@ -59,4 +61,12 @@
 
 .weather-status-icon {
   margin-left: 8px
+}
+
+.deleteBtn {
+  width: 10px;
+  height:10px;
+  position:absolute;
+  right: 8px;
+  top: 8px
 }
