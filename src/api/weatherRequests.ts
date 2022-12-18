@@ -6,7 +6,6 @@ const BASE_URL = 'https://api.openweathermap.org'
 
 class WeatherRequests {
   getWeatherByLocation = async (data: ILocation): Promise<IWeather> => {
-    let concatData: IWeather
     const metricResponse = await axios.get(`${BASE_URL}/data/2.5/weather?lat=${data.lat}&lon=${data.lon}&appid=${API_KEY}&units=metric`)
     const imperialResponse = await axios.get(`${BASE_URL}/data/2.5/weather?lat=${data.lat}&lon=${data.lon}&appid=${API_KEY}&units=imperial`)
     const tempGraphStatsMetric = await axios.get(`${BASE_URL}/data/2.5/forecast?q=${metricResponse.data.name}&cnt=${7}&appid=${API_KEY}&units=metric`)
@@ -23,12 +22,65 @@ class WeatherRequests {
         temp:Math.round(tempGraphStatsImperial.data.list[i].main.temp)
       })
     }
-    concatData = {
+    const metric = metricResponse.data
+    const imperial = imperialResponse.data
+
+    let concatData:IWeather = {
       savedType: data.type || 'metric',
-      metric: {...metricResponse.data},
-      imperial: {...imperialResponse.data},
+      metric: {
+        coord: {
+          lat: metric.coord.lan,
+          lon: metric.coord.lon
+        },
+        main: {
+          feels_like: metric.main.feels_like,
+          humidity :metric.main.humidity,
+          pressure : metric.main.pressure,
+          temp: metric.main.temp,
+        },
+        dt:metric.dt,
+        name:metric.name,
+        weather: [
+          {
+            main:metric.weather[0].name,
+            icon: metric.weather[0].icon
+          }
+        ],
+        sys:{
+          country:metric.sys.country
+        },
+        wind:{
+          speed:metric.wind.speed
+        }
+      },
+      imperial: {
+        coord: {
+          lat: imperial.coord.lan,
+          lon: imperial.coord.lon
+        },
+        main: {
+          feels_like: imperial.main.feels_like,
+          humidity :imperial.main.humidity,
+          pressure : imperial.main.pressure,
+          temp: imperial.main.temp,
+        },
+        dt:imperial.dt,
+        name:imperial.name,
+        weather: [
+          {
+            main:imperial.weather[0].name,
+            icon: imperial.weather[0].icon
+          }
+        ],
+        sys:{
+          country:imperial.sys.country
+        },
+        wind:{
+          speed:imperial.wind.speed
+        }
+      },
       graphData:{
-        metric:metricGraphData,
+        metric:imperialGraphData,
         imperial:imperialGraphData
       }
     }
