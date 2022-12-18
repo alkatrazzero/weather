@@ -1,0 +1,13 @@
+{
+  "Feelslike": "Ощущается как",
+  "Wind": "Ветер",
+  "Humidity":"Влажность",
+  "Pressure":"Давление",
+  "Rain" : "Дождь",
+  "Snow" : "Снег",
+  "Mist" : "Туман",
+  "Thunderstorm": "Гроза",
+  "Clear": "Ясно",
+  "Clouds": "Облачно",
+  "Date": "{{date, ddd DD MMMM, h:mm}}"
+}

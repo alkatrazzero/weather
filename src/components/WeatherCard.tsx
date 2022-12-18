@@ -3,6 +3,7 @@ import { Dispatch } from "redux";
 import { Card,Image } from 'antd';
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
 import {  useDispatch } from "react-redux";
+import { useTranslation,Trans } from "react-i18next"
 import {deleteWeatherData} from '../store/actionCreators'
 import{ Graph } from './Graph'
 import { ReactComponent as DeleteIcon } from '../public/icons/xmark-solid.svg';
@@ -28,6 +29,8 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
   const backgroundColor = isTempPositive === 1 ? 'rgb(255,250,241)' :'rgb(241,242,255)'
   const savedData = JSON.parse(localStorage.getItem('savedCountriesData') || '{}')
   const iconUrl=`http://openweathermap.org/img/wn/${selectedVariantWeatherData.weather[0].icon}@2x.png`
+
+  const { t, i18n } = useTranslation()
 
   const isEqual = (data:ILocation)=>{
     const equalLat = Math.round(weatherData.metric.coord.lat) === Math.round(Number(data.lat))
@@ -82,7 +85,9 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
         />
         <div className='weather-location'>
           <span className='country-title'>{`${selectedVariantWeatherData.name}, ${selectedVariantWeatherData.sys.country}`}</span>
-          <span>{moment(selectedVariantWeatherData.dt).format("ddd DD MMMM, h:mm")}</span>
+          <span>
+            {moment(selectedVariantWeatherData.dt).format("ddd DD MMMM, h:mm")}
+          </span>
         </div>
         <div className='weather-status'>
           <Image
@@ -90,7 +95,7 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
             preview={false}
             src={iconUrl}
           />
-          <span style={{marginLeft:'8px',color:'gray'}}>{selectedVariantWeatherData.weather[0].main}</span>
+          <span style={{marginLeft:'8px',color:'gray'}}>{t(selectedVariantWeatherData.weather[0].main)}</span>
         </div>
       </div>
       <div className='weather-graph'>
@@ -119,7 +124,8 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
             </div>
           </div>
           <span style= {{color: 'gray'}}>
-            Feels like: {isTempPositive === 1 && '+'}{feelsLikeTemp} {viewVariant === 'metric' ? '°C' : '℉'}
+            {t('Feelslike')}{':'}
+            <span>{isTempPositive === 1 && ' +'}{feelsLikeTemp} {viewVariant === 'metric' ? '°C' : '℉'}</span>
           </span>
         </div>
         <div style={{
@@ -128,7 +134,7 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
           'alignItems': 'flex-end'
         }}>
           {otherData.map(((data,index)=><span key={index}>
-            {data.title}:
+            {t(data.title)}:
             <span  style={{ color: isTempPositive === 1 ? 'orange' : 'blue'}}> {data.value}</span>
             </span>))}
         </div>

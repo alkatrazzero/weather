@@ -15,7 +15,6 @@ export const Graph: React.FC<Props> = ({graphData,isPositive}) => {
     })
   }
 
-  const graphColor = isPositive ? 'rgb(225,227,202)' : 'rgb(209,219,254)'
   return (
     <div>
       <div className="chart-areea">
@@ -32,7 +31,7 @@ export const Graph: React.FC<Props> = ({graphData,isPositive}) => {
             </defs>
           </svg>
             <VictoryChart
-              scale={{x: "time", y: "sqrt"}} width={1500} height={400}>
+              width={1500} height={400}>
               <VictoryGroup data={getDataArray()} >
                 <VictoryArea
                   interpolation="natural"
@@ -55,20 +54,15 @@ export const Graph: React.FC<Props> = ({graphData,isPositive}) => {
                       strokeWidth:0
                     },
                     tickLabels: {
-                      fontSize: '35px',
-                      fontFamily: 'inherit',
-                      fillOpacity: 1,
-                      marginLeft: 10,
-                      padding: 0
+                      display:'none',
                     },
-                    axisLabel: {
-                      fill:'gray',
-                      fontsize: 13
-                    }
                   }
                 }
               />
           </VictoryChart>
+          <div className='line-data-row'>
+            {getDataArray().map((i,index)=><span key={index} className='date-line'>{i.x}</span>)}
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import  React,{useEffect,useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next"
 import "./styles.css";
 import { Audio } from 'react-loader-spinner'
 import weatherRequests from './api/weatherRequests'
@@ -13,6 +14,28 @@ const App: React.FC = () => {
   const dispatch: Dispatch<any> = useDispatch();
   const [loading,setLoading] = useState<boolean>(false)
 
+  const { t, i18n, ready } = useTranslation()
+
+  interface ILang {
+    nativeName:string
+  }
+
+  interface IKeys {
+    en:ILang,
+    ru: ILang
+    ua: ILang
+  }
+
+  const langs:IKeys = {
+    en:{nativeName:'English'},
+    ua:{nativeName:'Ukraine'},
+    ru: {nativeName:'Russian'}
+  }
+
+  const changeLanguage = (lng:any) => {
+    i18n.changeLanguage(lng);
+  };
+
   const getWeatherByLocation = async (lat:number,lon:number,initialUpdate?:boolean,type?:string) => {
     const response = await weatherRequests.getWeatherByLocation({lat,lon,initialUpdate,type})
     dispatch(addWeatherData(response))
@@ -24,8 +47,8 @@ const App: React.FC = () => {
 
   const getLocation = ()=> {
     if (navigator.geolocation) {
-      let isConfirmed = confirm('Are you sure you want to share your location?');
-      if(isConfirmed)navigator.geolocation.getCurrentPosition(showPosition)
+      // let isConfirmed = confirm('Are you sure you want to share your location?');
+      // if(isConfirmed)navigator.geolocation.getCurrentPosition(showPosition)
     }
   }
 
@@ -45,7 +68,7 @@ const App: React.FC = () => {
     getLocation()
   },[])
 
-  if (loading){
+  if (loading || !ready){
     return (
       <div className='loader-wrapper'>
         <Audio/>
@@ -54,7 +77,16 @@ const App: React.FC = () => {
   }
   return (
     <div className="app-wrapper">
-      <h1>weather</h1>
+      <button disabled={i18n.resolvedLanguage === 'RU'} onClick={() => changeLanguage('RU')}>RU</button>
+      <button disabled={i18n.resolvedLanguage === 'EN'} onClick={() => changeLanguage('EN')}>EN</button>
+      <button disabled={i18n.resolvedLanguage === 'UA'} onClick={() => changeLanguage('UA')}>UA</button>
+      {/* <button
+        type='submit'
+        onClick={()=>i18n.changeLanguage('uk')}
+        disabled={i18n.resolvedLanguage === 'uk'}
+      >
+        {langs['ua' as keyof IKeys].nativeName}
+      </button> */}
       <AddWeatherCard
         getWeatherByLocation={getWeatherByLocation}
       />

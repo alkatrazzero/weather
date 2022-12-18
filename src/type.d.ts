@@ -1,5 +1,35 @@
+interface ICoord {
+  lat:number;
+  lon: number
+}
+
+interface ITemp {
+  feels_like: number
+  humidity :number
+  pressure : number
+  temp: number
+}
+
+interface IWeatherStatus {
+  main:'string',
+  icon: number
+}
+
+interface ISys {
+  country:string
+}
+
+interface IWind{
+  speed: number
+}
 interface IMetric {
-  [key:string]: any
+  coord: ICoord
+  dt: number
+  main:ITemp
+  name: string
+  weather: IWeatherStatus[]
+  sys:ISys
+  wind: IWind
 }
 
 interface IGraphValue {

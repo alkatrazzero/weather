@@ -28,6 +28,8 @@ main {
 }
 
 .app-wrapper {
+  margin-top: 80px;
+  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
