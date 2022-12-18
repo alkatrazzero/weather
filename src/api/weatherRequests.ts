@@ -7,7 +7,7 @@ const BASE_URL = 'https://api.openweathermap.org'
 class WeatherRequests {
   getWeatherByLocation = async (data: ILocation): Promise<IWeather> => {
     let concatData: IWeather
-    const metricResponse = await axios.get(`${BASE_URL}/data/2.5/weather?lat=${data.lat}&lon=${data.lon}&appid=${API_KEY}&units=metric&lang=RU`)
+    const metricResponse = await axios.get(`${BASE_URL}/data/2.5/weather?lat=${data.lat}&lon=${data.lon}&appid=${API_KEY}&units=metric`)
     const imperialResponse = await axios.get(`${BASE_URL}/data/2.5/weather?lat=${data.lat}&lon=${data.lon}&appid=${API_KEY}&units=imperial`)
     const tempGraphStatsMetric = await axios.get(`${BASE_URL}/data/2.5/forecast?q=${metricResponse.data.name}&cnt=${7}&appid=${API_KEY}&units=metric`)
     const tempGraphStatsImperial = await axios.get(`${BASE_URL}/data/2.5/forecast?q=${metricResponse.data.name}&cnt=${7}&appid=${API_KEY}&units=imperial`)

@@ -44,3 +44,10 @@ main {
   justify-content: center;
   position:absolute;
 }
+
+.translateBtns{
+  display:flex;
+  position:absolute;
+  top: 5px;
+  right: 5px
+}

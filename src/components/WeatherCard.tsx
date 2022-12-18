@@ -73,6 +73,7 @@ export const WeatherCard: React.FC<Props> = ({ weatherData }) => {
       value:selectedVariantWeatherData.main.pressure
     },
   ]
+
   return (
     <Card
       className="weather-card"

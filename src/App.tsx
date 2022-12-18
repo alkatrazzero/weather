@@ -2,6 +2,7 @@ import  React,{useEffect,useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next"
 import "./styles.css";
+import {Select} from 'antd'
 import { Audio } from 'react-loader-spinner'
 import weatherRequests from './api/weatherRequests'
 import { WeatherCard } from "./components/WeatherCard";
@@ -47,8 +48,8 @@ const App: React.FC = () => {
 
   const getLocation = ()=> {
     if (navigator.geolocation) {
-      // let isConfirmed = confirm('Are you sure you want to share your location?');
-      // if(isConfirmed)navigator.geolocation.getCurrentPosition(showPosition)
+      let isConfirmed = confirm('Are you sure you want to share your location?');
+      if(isConfirmed) navigator.geolocation.getCurrentPosition(showPosition)
     }
   }
 
@@ -77,16 +78,27 @@ const App: React.FC = () => {
   }
   return (
     <div className="app-wrapper">
-      <button disabled={i18n.resolvedLanguage === 'RU'} onClick={() => changeLanguage('RU')}>RU</button>
-      <button disabled={i18n.resolvedLanguage === 'EN'} onClick={() => changeLanguage('EN')}>EN</button>
-      <button disabled={i18n.resolvedLanguage === 'UA'} onClick={() => changeLanguage('UA')}>UA</button>
-      {/* <button
-        type='submit'
-        onClick={()=>i18n.changeLanguage('uk')}
-        disabled={i18n.resolvedLanguage === 'uk'}
-      >
-        {langs['ua' as keyof IKeys].nativeName}
-      </button> */}
+      <div className='translateBtns'>
+        <Select
+          defaultValue={i18n.resolvedLanguage || 'EN'}
+          style={{ width: 120 }}
+          onChange={(e)=>changeLanguage(e)}
+          options={[
+            {
+              value: 'EN',
+              label: 'EN',
+            },
+            {
+              value: 'RU',
+              label: 'RU',
+            },
+            {
+              value: 'UA',
+              label: 'UA',
+            },
+          ]}
+        />
+      </div>
       <AddWeatherCard
         getWeatherByLocation={getWeatherByLocation}
       />
